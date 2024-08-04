@@ -19,6 +19,22 @@ The Presale contract is designed to facilitate the sale of tokens during a presa
 - Keeps track of user balances and allows them to claim their purchased tokens after the presale ends.
 - Managed by an owner, who can control the presale status and end the presale.
 
+1. **Deployment Parameters**
+    - **NewBEP20Token Address:** Address of the NewBEP20Token after deployment on the mainnet.
+    - **Fund Receiver Address:** Address to receive the funds raised during the presale.
+    - **USDT Address:** Real USDT contract address.
+    - **USDC Address:** Real USDC contract address.
+
+### Starting the Presale
+
+1. **Enable Presale**
+    - Call the `setPresaleStatus` function with the argument `true`. To start the presale Only the owner can call this function.
+    - Call the `setCurrentStage` function to change round 1 to round 2,3,4,5. price will automatically change once round will be changed.
+    - Call the `setPresaleStatus` function with the argument `false`. To pause the presale Only the owner can call this function.
+    - Call the `endPresale` function to end the presale after this user can start claiming there tokens . Only the owner can call this function.
+2. **User Participation**
+    - Once the presale is enabled, users can start buying tokens.
+
 ## State Variables
 
 - `mainToken`: The token being sold.
