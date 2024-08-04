@@ -6,6 +6,13 @@ The Presale contract is designed to facilitate the sale of tokens during a presa
 
 **Key Feature**
 
+- **Presale Token Supply:** 150,000,000 tokens (15% of the total supply of NewBEP20Token).
+- **Prices per Round:**
+    - Round 1: 0.008 USD
+    - Round 2: 0.012 USD
+    - Round 3: 0.014 USD
+    - Round 4: 0.016 USD
+    - Round 5: 0.018 USD
 - Allows users to buy tokens with BNB, USDT, or USDC.
 - Uses Chainlink to fetch real-time BNB price in USD.
 - Provides security features like reentrancy guard and ownership control.
