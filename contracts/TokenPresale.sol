@@ -146,7 +146,7 @@ interface AggregatorV3Interface {
  * - Maintains records of user balances and allows users to claim their purchased tokens once the presale ends.
  * - Uses the OpenZeppelin Ownable contract for ownership management.
  *
- * Author: Sanjay Sen
+ * Author: Sanjay sen
  */
 
 contract Presale is Ownable, ReentrancyGuard {
