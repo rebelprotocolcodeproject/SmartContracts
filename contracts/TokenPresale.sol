@@ -549,11 +549,15 @@ contract Presale is Ownable, ReentrancyGuard {
         fundReceiver = payable(_addr);
     }
 
-    // to withdraw funds for liquidity
+    // updatePriceFeed
     function updatePriceFeed(
-        AggregatorV3Interface _priceFeed
+        AggregatorV3Interface _priceFeed,
+        AggregatorV3Interface _priceFeedUSDT,
+        AggregatorV3Interface _priceFeedUSDC
     ) external onlyOwner {
         priceFeed = _priceFeed;
+        priceFeedUSDT = _priceFeedUSDT;
+        priceFeedUSDC = _priceFeedUSDC;
     }
 
     // funtion is used to change the stage of presale
