@@ -146,7 +146,7 @@ interface AggregatorV3Interface {
  * - Maintains records of user balances and allows users to claim their purchased tokens once the presale ends.
  * - Uses the OpenZeppelin Ownable contract for ownership management.
  *
- * Author: Sanjay sen
+ * Author: Sanjay Sen
  */
 
 contract Presale is Ownable, ReentrancyGuard {
@@ -163,6 +163,8 @@ contract Presale is Ownable, ReentrancyGuard {
     uint8 public tokenDecimals;
     uint256 public minUsdAmountToBuy = 40000000; //40usdt usdc
     AggregatorV3Interface public priceFeed;
+    AggregatorV3Interface public priceFeedUSDT;
+    AggregatorV3Interface public priceFeedUSDC;
 
     struct Phase {
         uint256 tokenPerUsdPrice;
@@ -226,8 +228,15 @@ contract Presale is Ownable, ReentrancyGuard {
         USDT = IERC20(_USDT);
         USDC = IERC20(_USDC);
         priceFeed = AggregatorV3Interface(
-            0x0567F2323251f0Aab15c8dFb1967E4e8A7D42aeE
+            0x2514895c72f50D8bd4B4F9b1110F0D6bD2c97526
         );
+        priceFeedUSDT = AggregatorV3Interface(
+            0xEca2605f0BCF2BA5966372C99837b1F182d3D620
+        );
+        priceFeedUSDC = AggregatorV3Interface(
+            0x90c069C4538adAc136E051052E14c1cD799C41B7
+        );
+
         tokenDecimals = mainToken.decimals();
         tokensToSell = 150000000 * 10 ** tokenDecimals;
         tokenPerUsdPrice = [
@@ -263,6 +272,19 @@ contract Presale is Ownable, ReentrancyGuard {
 
     function getLatestPrice() public view returns (uint256) {
         (, int256 price, , , ) = priceFeed.latestRoundData();
+        price = (price * (10 ** 10));
+        return uint256(price);
+    }
+
+    // update usdc usdt
+    function getLatestPriceUSDT() public view returns (uint256) {
+        (, int256 price, , , ) = priceFeedUSDT.latestRoundData();
+        price = (price * (10 ** 10));
+        return uint256(price);
+    }
+
+    function getLatestPriceUSDC() public view returns (uint256) {
+        (, int256 price, , , ) = priceFeedUSDC.latestRoundData();
         price = (price * (10 ** 10));
         return uint256(price);
     }
@@ -320,13 +342,18 @@ contract Presale is Ownable, ReentrancyGuard {
         require(!isPresaleEnded, "Presale ended!");
         require(presaleStatus, " Presale is Paused, check back later");
         // update
-        require(amount >= minUsdAmountToBuy, "Insufficient USD amount");
+        // require(amount >= minUsdAmountToBuy, "Insufficient USD amount");
         if (!isExist[msg.sender]) {
             isExist[msg.sender] = true;
             uniqueBuyers++;
             UsersAddresses.push(msg.sender);
         }
         USDT.transferFrom(msg.sender, fundReceiver, amount);
+
+        // update
+        uint256 usdAmount = (amount * (getLatestPriceUSDT()) * (1e6)) /
+            (1e18 * 1e18);
+        require(usdAmount >= minUsdAmountToBuy, "Insufficient USD amount");
 
         uint256 numberOfTokens;
         numberOfTokens = usdtToToken(amount, currentStage);
@@ -336,7 +363,7 @@ contract Presale is Ownable, ReentrancyGuard {
         );
         soldToken = soldToken + numberOfTokens;
         amountRaisedUSDT = amountRaisedUSDT + amount;
-        totalRaised += amount;
+        totalRaised += usdAmount;
 
         users[msg.sender].usdt_balance += amount;
         users[msg.sender].claimAbleAmount =
@@ -356,13 +383,18 @@ contract Presale is Ownable, ReentrancyGuard {
         require(!isPresaleEnded, "Presale ended!");
         require(presaleStatus, " Presale is Paused, check back later");
         // update
-        require(amount >= minUsdAmountToBuy, "Insufficient USD amount");
+        // require(amount >= minUsdAmountToBuy, "Insufficient USD amount");
         if (!isExist[msg.sender]) {
             isExist[msg.sender] = true;
             uniqueBuyers++;
             UsersAddresses.push(msg.sender);
         }
         USDC.transferFrom(msg.sender, fundReceiver, amount);
+
+        // update
+        uint256 usdAmount = (amount * (getLatestPriceUSDC()) * (1e6)) /
+            (1e18 * 1e18);
+        require(usdAmount >= minUsdAmountToBuy, "Insufficient USD amount");
 
         uint256 numberOfTokens;
         numberOfTokens = usdtToToken(amount, currentStage);
@@ -373,7 +405,7 @@ contract Presale is Ownable, ReentrancyGuard {
 
         soldToken = soldToken + numberOfTokens;
         amountRaisedUSDC = amountRaisedUSDC + amount;
-        totalRaised += amount;
+        totalRaised += usdAmount;
 
         users[msg.sender].usdc_balance += amount;
 
@@ -453,7 +485,7 @@ contract Presale is Ownable, ReentrancyGuard {
         uint256 phaseId
     ) public view returns (uint256) {
         uint256 numberOfTokens = (_amount * phases[phaseId].tokenPerUsdPrice) /
-            (1e6);
+            (1e18);
 
         return numberOfTokens;
     }
