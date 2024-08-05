@@ -37,7 +37,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
  * - Implemented transfer throttling to prevent excessive transactions.
  * - Utilizes OpenZeppelin libraries for enhanced security.
  *
- * Author: Sanjay Sen
+ * Author:
  */
 
 contract NewBEP20token is ERC20, ERC20Permit, ReentrancyGuard {
