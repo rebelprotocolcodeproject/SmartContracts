@@ -228,13 +228,13 @@ contract Presale is Ownable, ReentrancyGuard {
         USDT = IERC20(_USDT);
         USDC = IERC20(_USDC);
         priceFeed = AggregatorV3Interface(
-            0x2514895c72f50D8bd4B4F9b1110F0D6bD2c97526
+            0x0567F2323251f0Aab15c8dFb1967E4e8A7D42aeE
         );
         priceFeedUSDT = AggregatorV3Interface(
-            0xEca2605f0BCF2BA5966372C99837b1F182d3D620
+            0xB97Ad0E74fa7d920791E90258A6E2085088b4320
         );
         priceFeedUSDC = AggregatorV3Interface(
-            0x90c069C4538adAc136E051052E14c1cD799C41B7
+            0x51597f405303C4377E36123cBc172b13269EA163
         );
 
         tokenDecimals = mainToken.decimals();
@@ -544,12 +544,12 @@ contract Presale is Ownable, ReentrancyGuard {
         return UsersAddresses.length;
     }
 
-    // to withdraw funds for liquidity
+    // change fundreceiver
     function changeFundReciever(address _addr) external onlyOwner {
         fundReceiver = payable(_addr);
     }
 
-    // to withdraw funds for liquidity
+    // update presale
     function updatePriceFeed(
         AggregatorV3Interface _priceFeed,
         AggregatorV3Interface _priceFeedUSDT,
