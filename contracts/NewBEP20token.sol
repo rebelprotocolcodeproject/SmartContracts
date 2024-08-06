@@ -40,7 +40,7 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
  * Author:
  */
 
-contract NewBEP20token is ERC20, ERC20Permit, ReentrancyGuard {
+contract RebelToken is ERC20, ERC20Permit, ReentrancyGuard {
     ///////////////////
     // Errors
     ///////////////////
